@@ -136,24 +136,24 @@ class main_loop():
                         score_walls.insert(0, walls)
 
                     if walls.pos_x < -wall_data['wall_thickness']:
+                        score_walls.remove(walls)
                         cur_walls.remove(walls)
 
                     else:
                         walls.pos_x -= walls.wall_speed
                         walls.draw_walls(self.screen)
 
-            if self.mouse_tick < 0 and (self.cur_bird.pos_y - self.cur_bird.size) < 0:
-                self.run_state = False
-            elif self.mouse_tick > 0 and (self.cur_bird.pos_y + self.cur_bird.size) > 900:
-                self.run_state = False
-
             if self.run_state:
                 self.cur_bird.pos_y += 0.1 * (self.mouse_tick^2)
 
-                self.cur_bird.pos_y = max(min(self.cur_bird.pos_y, 900), 0)
+                self.cur_bird.pos_y = max(min(self.cur_bird.pos_y, 900-self.cur_bird.size), self.cur_bird.size)
+                print(self.cur_bird.pos_y)
+                
+                if self.cur_bird.pos_y == 875 or self.cur_bird.pos_y == 25:
+                    self.run_state = False
 
-                check_up = self.screen.get_at((self.cur_bird.pos_x, int(self.cur_bird.pos_y - self.cur_bird.size+5)))
-                check_down = self.screen.get_at((self.cur_bird.pos_x, int(self.cur_bird.pos_y + self.cur_bird.size-5)))
+                check_up = self.screen.get_at((self.cur_bird.pos_x, int(self.cur_bird.pos_y - self.cur_bird.size)))
+                check_down = self.screen.get_at((self.cur_bird.pos_x, int(self.cur_bird.pos_y + self.cur_bird.size-1)))
                 check_front = self.screen.get_at((int(self.cur_bird.pos_x+self.cur_bird.size+2), int(self.cur_bird.pos_y)))
 
                 if check_up == (0, 200, 0, 255) or check_down == (0, 200, 0, 255) or check_front == (0, 200, 0, 255):
